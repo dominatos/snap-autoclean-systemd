@@ -3,32 +3,29 @@
 
 set -euo pipefail
 
-REPO="YOUR_USERNAME/snap-autoclean-systemd"
-DIR="$HOME/.local/share/snap-autoclean"
+REPO="${REPO:-dominatos/snap-autoclean-systemd}"
+REF="${REF:-main}"
 
 echo "🧹 Installing Snap-Autoclean Systemd..."
 
 # Create temp dir
 TMP=$(mktemp -d)
-cd "$TMP"
+trap 'rm -rf "$TMP"' EXIT
 
 # Download files
-curl -sSL "https://raw.githubusercontent.com/$REPO/main/clean-snap.sh" > clean-snap.sh
-curl -sSL "https://raw.githubusercontent.com/$REPO/main/snap-clean.service" > snap-clean.service
-curl -sSL "https://raw.githubusercontent.com/$REPO/main/snap-clean.timer" > snap-clean.timer
+curl -fsSL "https://raw.githubusercontent.com/$REPO/$REF/clean-snap.sh" > "$TMP/clean-snap.sh"
+curl -fsSL "https://raw.githubusercontent.com/$REPO/$REF/snap-clean.service" > "$TMP/snap-clean.service"
+curl -fsSL "https://raw.githubusercontent.com/$REPO/$REF/snap-clean.timer" > "$TMP/snap-clean.timer"
 
-chmod +x clean-snap.sh
+chmod +x "$TMP/clean-snap.sh"
 
 # Install to system
-sudo cp snap-clean.* /etc/systemd/system/
+sudo cp "$TMP"/snap-clean.* /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now snap-clean.timer
 
-sudo cp clean-snap.sh /usr/local/bin/snap-autoclean
-
-
-# Cleanup
-rm -rf "$TMP"
+sudo cp "$TMP/clean-snap.sh" /usr/local/bin/snap-autoclean
+sudo chmod +x /usr/local/bin/snap-autoclean
 
 echo "✅ Installed! Daily cleanup enabled."
 echo "📊 Check: systemctl list-timers snap-clean.timer"

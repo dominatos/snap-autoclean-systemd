@@ -8,7 +8,7 @@ Automated **daily cleanup** of old snap revisions + cache. **Non-interactive**, 
 
 ## 🚀 Quick Install (1 command)
 ```bash
-curl -sSL https://raw.githubusercontent.com/dominatos/snap-autoclean-systemd/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/dominatos/snap-autoclean-systemd/refs/heads/master/install.sh | bash
 ```
 
 ## 📁 Files Structure
@@ -55,18 +55,23 @@ User=root
 ExecStart=/usr/local/bin/snap-autoclean
 ```
 
-## 📦 Manual Install
+## Manual Install
 ```bash
 # 1. Download & install binary
-sudo curl -sSL https://raw.githubusercontent.com/dominatos/snap-autoclean-systemd/main/clean-snap.sh -o /usr/local/bin/snap-autoclean
+sudo curl -sSL https://raw.githubusercontent.com/dominatos/snap-autoclean-systemd/refs/heads/master/clean-snap.sh -o /usr/local/bin/snap-autoclean
 sudo chmod +x /usr/local/bin/snap-autoclean
 
 # 2. Install systemd files
-sudo curl -sSL https://raw.githubusercontent.com/dominatos/snap-autoclean-systemd/main/snap-clean.* -o /etc/systemd/system/
+sudo curl -sSL https://raw.githubusercontent.com/dominatos/snap-autoclean-systemd/refs/heads/master/snap-clean.service -o /etc/systemd/system/snap-clean.service
+sudo curl -sSL https://raw.githubusercontent.com/dominatos/snap-autoclean-systemd/refs/heads/master/snap-clean.timer -o /etc/systemd/system/snap-clean.timer
 
 # 3. Activate
 sudo systemctl daemon-reload
 sudo systemctl enable --now snap-clean.timer
+```
+## ⚙️ Uninstall
+```bash
+sudo systemctl disable --now snap-clean.timer && sudo rm /etc/systemd/system/snap-clean.* /usr/local/bin/snap-autoclean && sudo systemctl daemon-reload
 ```
 
 ## Troubleshooting
