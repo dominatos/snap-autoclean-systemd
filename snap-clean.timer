@@ -1,0 +1,11 @@
+[Unit]
+Description=Timer for snap-clean
+Requires=snap-clean.service
+
+[Timer]
+OnBootSec=30min
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target
