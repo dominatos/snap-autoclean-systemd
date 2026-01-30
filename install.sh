@@ -4,7 +4,7 @@
 set -euo pipefail
 
 REPO="${REPO:-dominatos/snap-autoclean-systemd}"
-REF="${REF:-main}"
+REF="${REF:-master}"
 
 echo "🧹 Installing Snap-Autoclean Systemd..."
 
